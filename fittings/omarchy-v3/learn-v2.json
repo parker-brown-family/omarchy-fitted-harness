@@ -1,0 +1,207 @@
+{
+ "evidence": [
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-sonnet-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json; ls .config/omarchy .config/omarchy/plugins; grep -ril clock /usr/share/omarchy/shell/plugins | head -20\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins/panels/clock; cat BarWidget.qml manifest.json; grep -n -i \\\"second\\\\|interval\\\\|format\\\" Model.js | head -30\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy; grep -n -i \\\"clone\\\" -r default/agents/skills/omarchy/plugins.md | head; sed -n 1,40p shell/plugins/panels/clock/Model.js; cat $(which omarchy-plugin-clone) 2>/dev/null | head -60\"}",
+    "call bash {\"command\": \"cd ~ 2>/dev/null; pwd; echo $USER; which omarchy\"}",
+    "call bash {\"command\": \"sed -n 60,200p $(which omarchy-plugin-clone); ls /usr/share/omarchy/shell/plugins/panels/clock; sed -n 20,60p /usr/share/omarchy/default/agents/skills/omarchy/plugins.md\"}",
+    "call bash {\"command\": \"cat $(which omarchy-plugin-enable); grep -n \\\"clonedFrom\\\" -r /usr/share/omarchy/shell --include=*.qml --include=*.js | head\"}",
+    "call bash {\"command\": \"sed -n 480,600p /usr/share/omarchy/shell/services/PluginRegistry.qml; sed -n 100,125p /usr/share/omarchy/shell/services/PluginRegistry.qml\"}",
+    "call bash {\"command\": \"set -e\\nd=.config/omarchy/plugins/parker.clock\\nmkdir -p $d && cp -aL /usr/share/omarchy/shell/plugins/panels/clock/. $d/\\njq '.id=\\\"parker.clock\\\"|.name=\\\"My Clock\\\"|.barWidget.displayName=\\\"My Clock\\\"|.omarchy={clonedFrom:\\\"omarchy.clock\\\"}' $d/manifest.json > $d/m.tmp && mv $d/m.tmp ",
+    "call bash {\"command\": \"grep -n \\\"canonicalWidgetId\\\" -A12 /usr/share/omarchy/shell/*/Util.js | head -30\"}",
+    "call bash {\"command\": \"grep -rn \\\"function canonicalWidgetId\\\" -A12 /usr/share/omarchy/shell | head -20; sed -n 1515,1530p /usr/share/omarchy/shell/plugins/bar/Bar.qml\"}",
+    "call check {\"name\": \"all\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "nterAnchor` points at `parker.clock` too, so the centering still works. A backup is next to it as `shell.json.bak.<timestamp>`.\n\nI left the alternate format (`d MMMM 'W'ww yyyy`, used when you right-click) and the vertical format unchanged. The bar is at the top, so the vertical format isn't used.\n\nTo apply it, run `omarchy-shell shell rescanPlugins`. The shell should hot-reload on its own, but that forces it. If the clock doesn't appear, run `omarchy plugin list` to check that `parker.clock` was discovered. I didn't verify the clone against the shell's plugin registry beyond reading its code.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call grep {\"pattern\": \"clock\", \"path\": \".config\", \"max_results\": 50}",
+    "call read {\"path\": \".config/omarchy/shell.json\"}",
+    "call bash {\"command\": \"grep -rIl \\\"verticalFormat\\\" . 2>/dev/null | head\"}",
+    "call edit {\"path\": \".config/omarchy/shell.json\", \"old\": \"\\\"dddd HH:mm\\\",\", \"new\": \"\\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"python3 -m json.tool .config/omarchy/shell.json >/dev/null && echo ok\"}"
+   ]
+  },
+  {
+   "task": "om-autostart",
+   "model": "claude-haiku-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport re\ndef strip(src):\n    out = []\n    for line in src.splitlines():\n        q, i, cut = None, 0, len(line)\n        while i < len(line):\n            c = line[i]\n            if q:\n                if c == '\\\\':\n                    i += 2\n                    continue\n               \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 23, in <module>\nAssertionError: launch_on_start\n"
+   ],
+   "fitted_steps": [
+    "call read {\"path\": \".config/hypr/autostart.lua\"}",
+    "call read {\"path\": \"bin/mount-nas.sh\"}",
+    "call bash {\"command\": \"ls -la bin/ 2>&1; grep -n \\\"launch_on_start\\\" -r /usr/share/omarchy/default/hypr/ 2>/dev/null | head; grep -n -A8 \\\"launch_on_start\\\" /usr/share/omarchy/default/agents/skills/omarchy/hooks.md /usr/share/omarchy/default/agents/skills/omarchy/SKILL.md 2>/dev/null | head -40\"}",
+    "call bash {\"command\": \"sed -n 105,135p /usr/share/omarchy/default/hypr/helpers.lua; echo ---; find . -name 'mount-nas*' 2>/dev/null; find . -path ./proc -prune -o -name '*.sh' -print 2>/dev/null | head -30; echo ---; cat .config/hypr/hyprland.lua 2>/dev/null | head -40\"}",
+    "call bash {\"command\": \"grep -rn 'HOME\\\\|~/' /usr/share/omarchy/default/hypr/*.lua | head -20; grep -rn \\\"launch_on_start\\\\|exec_on_start\\\" /usr/share/omarchy/default/hypr/ | head; ls -la ~/bin 2>&1 | head -3\"}",
+    "call bash {\"command\": \"cp .config/hypr/autostart.lua .config/hypr/autostart.lua.bak.$(date +%s) && cat >> .config/hypr/autostart.lua <<'EOF'\\n\\n-- Mount the NAS at login. Runs through a shell, so $HOME expands.\\no.exec_on_start('\\\"$HOME/bin/mount-nas.sh\\\"')\\nEOF\\ncat .config/hypr/autostart.lua; luac -p .confi",
+    "call check {\"name\": \"lua\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "ion:** `luac -p` passes on the file, and the `lua` check passes. I did not reload Hyprland, so the line has not run yet.\n\n**What you should check on your machine:**\n- The script must exist at `~/bin/mount-nas.sh` and be executable (`chmod +x ~/bin/mount-nas.sh`). I could not confirm either, because `bin/` is absent from this copy.\n- After logging in, confirm the mount happened. If it did not, run `hyprctl reload && hyprctl configerrors` and check the script's output.\n- If the script needs a network share that is not up yet at login, it may fail on the first try. I did not add a delay or retry.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-autostart-3643d03c && find . -maxdepth 3 -not -path '*/.git*' | head -200 && echo --- && cat bin/mount-nas.sh 2>/dev/null; echo \\\"--- exec-once grep\\\"; grep -rn \\\"exec-once\\\\|autostart\\\" .config/hypr 2>/dev/null\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-autostart-3643d03c && cat -A .config/hypr/autostart.lua | head -50; echo ---; cat .config/hypr/hyprland.lua; echo ---; cat .config/hypr/hyprsunset.conf | head -20; echo ---; ls -la bin 2>&1; ls -la .config/omarchy/hooks\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-autostart-3643d03c && grep -rn \\\"launch_on_start\\\" / --include=*.lua 2>/dev/null | head; ls -la .config/omarchy/hooks/post-boot.d; ls /usr/share/omarchy 2>&1 | head -3; cat .config/hypr/.luarc.json\"}",
+    "call bash {\"command\": \"sed -n 100,140p /usr/share/omarchy/default/hypr/helpers.lua; echo ---; ls -la /usr/share/omarchy/bin | grep -i mount; ls ~/bin 2>&1 | head -2\"}",
+    "call edit {\"path\": \".config/hypr/autostart.lua\", \"old\": \"-- o.launch_on_start(\\\"my-service\\\")\\n\", \"new\": \"-- o.launch_on_start(\\\"my-service\\\")\\n\\n-- Mount the NAS at every login.\\no.launch_on_start(\\\"sh -c 'exec \\\\\\\"$HOME/bin/mount-nas.sh\\\\\\\"'\\\")\\n\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-autostart-3643d03c && cat .config/hypr/autostart.lua && which luac lua lua5.4 luajit 2>/dev/null; cat > /tmp/chk.lua <<'EOF'\\nlocal calls = {}\\nhl = { on = function(ev, f) calls[#calls+1] = ev; f() end, exec_cmd = function(c) print(\\\"EXEC: \\\" .. c) end }\\",
+    "call bash {\"command\": \"rm -f /tmp/chk.lua; cd ~/.cache/h0/ws/om-autostart-3643d03c && luac -p .config/hypr/autostart.lua && echo SYNTAX_OK\"}"
+   ]
+  },
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-haiku-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json 2>/dev/null; echo ---; ls .config/omarchy/plugins 2>/dev/null; echo ---; ls $OMARCHY_PATH/shell/plugins/ 2>/dev/null; echo; ls /usr/share/omarchy/shell/plugins/ 2>/dev/null\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins/bar 2>/dev/null && ls; grep -ril \\\"clock\\\" /usr/share/omarchy/shell/plugins/bar | head; f=$(grep -ril \\\"formatAlt\\\" /usr/share/omarchy/shell/plugins/bar | head -1); echo \\\"FILE $f\\\"; grep -n -i \\\"interval\\\\|SystemClock\\\\|format\\\\|seconds\\\" \\\"$f\\\" | he",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; grep -ril \\\"formatAlt\\\\|verticalFormat\\\" . ; echo ---; f=$(grep -ril \\\"clock\\\" --include=*.qml . | grep -i clock | head -3); echo \\\"$f\\\"; for x in $f; do echo \\\"== $x\\\"; cat \\\"$x\\\"; done | head -150\"}",
+    "call bash {\"command\": \"cd ~ 2>/dev/null; cp .config/omarchy/shell.json /tmp/shell.json.orig; omarchy plugin clone --help 2>&1 | head -30\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-7a0cf3d3 && pwd && echo $HOME && cat \\\"$(which omarchy-plugin-clone)\\\" | head -120\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins/panels/clock && ls -la && cat manifest.json && grep -n \\\"precision\\\\|SystemClock\\\" *.qml *.js\"}",
+    "call bash {\"command\": \"sed -n 120,220p \\\"$(which omarchy-plugin-clone)\\\"\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-7a0cf3d3 && set -e\\ncp .config/omarchy/shell.json .config/omarchy/shell.json.bak.$(date +%s)\\nD=.config/omarchy/plugins/parker.clock\\nmkdir -p \\\"$D\\\" && cp -aL /usr/share/omarchy/shell/plugins/panels/clock/. \\\"$D/\\\"\\nchmod -R u+w \\\"$D\\\"\\njq ",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-7a0cf3d3 && set -e\\njq '.omarchy.clonedFrom=\\\"omarchy.clock\\\"' .config/omarchy/plugins/parker.clock/manifest.json > /tmp/m.json && mv /tmp/m.json .config/omarchy/plugins/parker.clock/manifest.json\\njq '.bar.layout.center |= map(if .id==\\\"oma",
+    "call check {\"name\": \"all\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-7a0cf3d3 && ls .config/omarchy/ && python3 -c \\\"import json;print(json.load(open('.config/omarchy/shell.json'))['bar']['layout']['center'][1])\\\"\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "use you asked about the top bar.\n\n**Verification:** the `all` check passed. The JSON parses and the layout entry is correct. I could not reload the shell here.\n\n**To apply on the desktop:** run `omarchy-shell shell rescanPlugins`, or let the shell hot-reload. Then confirm the seconds tick. If the bar still shows the built-in clock, the plugin may not have been discovered or enabled. The clone script also calls `omarchy-plugin-enable parker.clock`, which I did not run, so enable it from the shell if needed.\n\n**To revert:** restore `shell.json` from the backup and delete `plugins/parker.clock/`.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-a4d976be && ls -la && find . -path '*waybar*' -type f | head -50 && grep -rn -i \\\"clock\\\" --include=* .config/waybar 2>/dev/null | head -40\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-a4d976be && find .config -type f | head -100; git status 2>&1 | head; git log --oneline 2>&1 | head -5\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-a4d976be && cat .config/omarchy/shell.json; echo ---; cat .config/omarchy/extensions/omarchy-menu.jsonc | head -40; echo ---; grep -rn -i \\\"clock\\\\|bar\\\\|waybar\\\\|%H\\\\|%I\\\" .config --include=* | grep -v themes/ | head -30\"}",
+    "call edit {\"path\": \"~/.cache/h0/ws/om-clock-seconds-a4d976be/.config/omarchy/shell.json\", \"old\": \"          \\\"format\\\": \\\"dddd HH:mm\\\",\", \"new\": \"          \\\"format\\\": \\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-a4d976be && python3 -m json.tool .config/omarchy/shell.json >/dev/null && echo JSON_OK && git diff --stat && git diff\"}"
+   ]
+  },
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-opus-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json; ls .config/omarchy/plugins 2>/dev/null; ls /usr/share/omarchy/shell/plugins/ 2>/dev/null; grep -n -i -A3 clock /usr/share/omarchy/default/agents/skills/omarchy/plugins.md | head -60\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; grep -rn -l -i clock . | head; f=$(grep -rl '\\\"omarchy.clock\\\"\\\\|omarchy.clock' . | head -5); echo \\\"$f\\\"\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; cat panels/clock/BarWidget.qml; grep -n -i -B2 -A8 clock bar/README.md | head -60\"}",
+    "call bash {\"command\": \"which omarchy omarchy-plugin omarchy-plugin-clone 2>&1; ls /usr/share/omarchy/bin | grep -i plugin; ls /usr/share/omarchy/shell/plugins/panels /usr/share/omarchy/shell/plugins/panels/clock; cat /usr/share/omarchy/shell/plugins/panels/manifest.json 2>/dev/null | head -60\"}",
+    "call bash {\"command\": \"cat /usr/bin/omarchy-plugin-clone; cat /usr/share/omarchy/shell/plugins/panels/clock/manifest.json\"}",
+    "call bash {\"command\": \"cat /usr/bin/omarchy-plugin-enable\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell; grep -rn \\\"function enablePlugin\\\" -A40 --include=*.qml --include=*.js . | head -80; grep -rn \\\"clonedFrom\\\" --include=*.qml --include=*.js . | head -20\"}",
+    "call read {\"path\": \"/usr/share/omarchy/shell/services/PluginRegistry.qml\", \"offset\": 480, \"limit\": 90}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell; grep -rn \\\"centerAnchor\\\" --include=*.qml --include=*.js . | head -20\"}",
+    "call bash {\"command\": \"set -e; cd .config/omarchy\\ncp shell.json shell.json.bak.$(date +%s)\\nt=plugins/parker.clock; mkdir -p plugins; [ ! -e $t ]\\nmkdir $t; cp -aL /usr/share/omarchy/shell/plugins/panels/clock/. $t/\\nchmod -R u+w $t\\njq --arg id parker.clock --arg name \\\"My Clock\\\" --arg sourceId omarchy.clo",
+    "call check {\"name\": \"all\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": " should pick this up on its own. If it doesn't, run `omarchy-shell shell rescanPlugins`.\n\n**Things to know:**\n- Right-clicking the clock still cycles through preset formats, and the one you land on replaces the seconds format. To get seconds back, set `format` to `dddd HH:mm:ss` again in `shell.json`.\n- With the bar on the left or right side, the clock uses `verticalFormat`, which is still hours and minutes only. I left it alone because your bar is at the top.\n- To go back to the stock clock, run `omarchy plugin enable omarchy.clock`, or restore the backup and delete the `parker.clock` folder.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"ls -a; ls -a .config; ls .config/waybar 2>/dev/null; grep -n -A8 '\\\"clock\\\"' .config/waybar/config* 2>/dev/null\"}",
+    "call bash {\"command\": \"cd .config; find hypr omarchy -type f | head -50; grep -rniE 'clock|%H|%M|time|bar' hypr omarchy | head -40\"}",
+    "call bash {\"command\": \"cd .config/omarchy; cat shell.json; cd ~ 2>/dev/null; git -C ~/.cache/h0/ws/om-clock-seconds-d503792c log --oneline | head\"}",
+    "call edit {\"path\": \".config/omarchy/shell.json\", \"old\": \"\\\"dddd HH:mm\\\",\", \"new\": \"\\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"python -m json.tool .config/omarchy/shell.json >/dev/null && echo ok; git diff\"}"
+   ]
+  },
+  {
+   "task": "om-autostart",
+   "model": "claude-sonnet-5-5",
+   "trial": 3,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport re\ndef strip(src):\n    out = []\n    for line in src.splitlines():\n        q, i, cut = None, 0, len(line)\n        while i < len(line):\n            c = line[i]\n            if q:\n                if c == '\\\\':\n                    i += 2\n                    continue\n               \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 23, in <module>\nAssertionError: launch_on_start\n"
+   ],
+   "fitted_steps": [
+    "call read {\"path\": \".config/hypr/autostart.lua\"}",
+    "call bash {\"command\": \"ls -la bin; head -20 bin/mount-nas.sh; grep -rn \\\"launch_on_start\\\" /usr/share/omarchy/default/hypr | head\"}",
+    "call read {\"path\": \"/usr/share/omarchy/default/hypr/helpers.lua\", \"offset\": 105, \"limit\": 30}",
+    "call edit {\"path\": \".config/hypr/autostart.lua\", \"old\": \"-- o.launch_on_start(\\\"my-service\\\")\", \"new\": \"-- o.launch_on_start(\\\"my-service\\\")\\n\\n-- Mount the NAS at login (run via bash so it works even without the exec bit).\\no.exec_on_start(\\\"bash \\\\\\\"$HOME/bin/mount-nas.sh\\\\\\\"\\\")\"}",
+    "trigger hypr-guide inject ok=None",
+    "trigger lua-syntax require ok=True",
+    "call check {\"name\": \"lua\"}",
+    "call bash {\"command\": \"grep -n -i -B2 -A6 \\\"autostart\\\\|exec_on_start\\\\|launch_on_start\\\" /usr/share/omarchy/default/agents/skills/omarchy/hyprland.md | head -40\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "sh` so it runs even if the script isn't executable. I didn't use `o.launch_on_start`, because it wraps the command in `uwsm-app`, which wouldn't expand `$HOME`.\n- **Script missing:** `~/bin/mount-nas.sh` doesn't exist in this workspace copy, so I couldn't read it or check it. Make sure it exists on your real system.\n- **Checks:** The `lua` check passes. I couldn't reload the live desktop. You can run `hyprctl reload && hyprctl configerrors` to confirm the config is clean.\n- **When it fires:** The command runs on Hyprland's `hyprland.start` event, which fires at login. A reload won't re-run it.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-autostart-cd043a1c 2>/dev/null || pwd; ls -la; cat .config/hypr/hyprland.conf; ls .config/hypr; cat .config/hypr/autostart.conf 2>/dev/null; cat bin/mount-nas.sh\"}",
+    "call bash {\"command\": \"cd .config/hypr; cat autostart.lua hyprland.lua; ls -la ~/ ../; find ../.. -name \\\"mount-nas*\\\" -not -path \\\"*/.git/*\\\"\"}",
+    "call bash {\"command\": \"grep -rn \\\"launch_on_start\\\\|exec_once\\\\|exec-once\\\" /usr/share/omarchy ~/.config .config 2>/dev/null | head\"}",
+    "call bash {\"command\": \"cat .config/hypr/bindings.lua | head -20\"}",
+    "call bash {\"command\": \"sed -n 105,135p /usr/share/omarchy/default/hypr/helpers.lua\"}",
+    "call bash {\"command\": \"cat >> .config/hypr/autostart.lua <<'EOF'\\n\\n-- Mount the NAS at login.\\no.launch_on_start(\\\"bash ~/bin/mount-nas.sh\\\")\\nEOF\\ntail -4 .config/hypr/autostart.lua\"}"
+   ]
+  }
+ ],
+ "proposal": {
+  "diagnosis": [
+   {
+    "task": "om-clock-seconds",
+    "cause": "fitting",
+    "explanation": "The fitting's widget guidance always said to clone built-in plugins (shell-guide note, map 'Customizing a built-in widget', L4). All three fitted runs cloned the clock and swapped the layout id away from omarchy.clock. Vanilla runs just edited the existing widget's format option in shell.json."
+   },
+   {
+    "task": "om-autostart",
+    "cause": "model",
+    "explanation": "The fitting already names o.launch_on_start for autostart.lua. Both fitted runs read helpers.lua, worried that the uwsm-app wrapper would not expand $HOME, and switched to o.exec_on_start. Nothing in the fitting suggested that. Vanilla used launch_on_start and passed, so a small map clarification is a cheap nudge."
+   }
+  ],
+  "edits": [
+   {
+    "op": "update_trigger",
+    "id": "shell-guide",
+    "note": "Read /usr/share/omarchy/default/agents/skills/omarchy/plugins.md first. Bar is omarchy-shell, not Waybar; idle values are seconds. Built-in widget options are set on its shell.json bar.layout entry; clone a plugin only to change its code, never edit packaged ones."
+   },
+   {
+    "op": "edit_map",
+    "old": "- Customizing a built-in widget:\n  - Run `omarchy plugin clone omarchy.<name>`, then edit `.config/omarchy/plugins/<username>.<name>/`.\n  - Cloning switches the bar to the clone.\n  - Never edit the packaged copy.",
+    "new": "- Built-in widget options (format etc.): edit its existing entry in `shell.json` `bar.layout` and keep its id.\n- Only to change a widget's code: run `omarchy plugin clone omarchy.<name>`, then edit `.config/omarchy/plugins/<username>.<name>/`. Cloning switches the bar to the clone. Never edit the packaged copy."
+   },
+   {
+    "op": "remove_lesson",
+    "id": "L4"
+   },
+   {
+    "op": "edit_map",
+    "old": ".config/hypr/autostart.lua     o.launch_on_start(...)",
+    "new": ".config/hypr/autostart.lua     o.launch_on_start(...) for login commands (not exec_on_start)"
+   }
+  ],
+  "expected_effect": "Agents will change built-in widget settings in place in shell.json instead of cloning plugins, and will use the documented o.launch_on_start for login autostart; neither change affects the passing Hypr, theme or hook tasks."
+ },
+ "applied": [
+  "updated trigger shell-guide",
+  "edited map",
+  "removed lesson L4",
+  "edited map"
+ ],
+ "meta": {
+  "usage": {
+   "input_tokens": 4,
+   "cache_creation_input_tokens": 15513,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 2327,
+   "thinking_tokens": 1491
+  },
+  "usd": 0.124121
+ }
+}

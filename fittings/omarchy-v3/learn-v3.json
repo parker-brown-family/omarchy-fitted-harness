@@ -1,0 +1,155 @@
+{
+ "evidence": [
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-sonnet-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json; ls .config/omarchy .config/omarchy/plugins 2>/dev/null; grep -rn -i clock /usr/share/omarchy/config/omarchy/shell.json\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; ls | grep -i clock; cat omarchy.clock/*.qml | head -80; cat omarchy.clock/*.json\"}",
+    "call bash {\"command\": \"grep -rli \\\"formatAlt\\\" /usr/share/omarchy/shell | head; \"}",
+    "call bash {\"command\": \"cat /usr/share/omarchy/shell/plugins/panels/clock/BarWidget.qml\"}",
+    "call bash {\"command\": \"grep -n -i \\\"second\\\\|ss\\\" /usr/share/omarchy/shell/plugins/panels/clock/Model.js | head -20; grep -n -i \\\"plugin clone\\\" -A5 /usr/share/omarchy/default/agents/skills/omarchy/plugins.md | head -30; ls /usr/share/omarchy/shell/plugins/panels/clock\"}",
+    "call bash {\"command\": \"omarchy plugin clone omarchy.clock 2>&1 | tail -20; ls .config/omarchy/plugins; git status --short 2>/dev/null | head\"}",
+    "call bash {\"command\": \"cat $(which omarchy-plugin-clone) 2>/dev/null | head -80; cat /usr/share/omarchy/shell/plugins/panels/clock/manifest.json; echo $USER; id -un\"}",
+    "call bash {\"command\": \"sed -n 80,200p $(which omarchy-plugin-clone)\"}",
+    "call bash {\"command\": \"cat $(which omarchy-plugin-enable); grep -n \\\"clonedFrom\\\" -r /usr/share/omarchy/shell --include=*.qml --include=*.js | head\"}",
+    "call bash {\"command\": \"sed -n 480,570p /usr/share/omarchy/shell/services/PluginRegistry.qml; sed -n 100,125p /usr/share/omarchy/shell/services/PluginRegistry.qml; sed -n 170,185p /usr/share/omarchy/shell/services/PluginRegistry.qml\"}",
+    "call bash {\"command\": \"d=.config/omarchy/plugins/parker.clock\\nmkdir -p $d && cp -aL /usr/share/omarchy/shell/plugins/panels/clock/. $d/\\njq '.id=\\\"parker.clock\\\"|.name=\\\"My Clock\\\"|.barWidget.displayName=\\\"My Clock\\\"|.omarchy={clonedFrom:\\\"omarchy.clock\\\"}' $d/manifest.json > $d/m.tmp && mv $d/m.tmp $d/manif",
+    "call check {\"name\": \"all\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "rmat` is `dddd HH:mm:ss`, and the vertical format also gets a seconds line. I left `centerAnchor` as `omarchy.clock`, as the stock clone command would. I kept a backup as `shell.json.bak.<timestamp>`.\n\n`shell.json` hot-reloads. If the bar doesn't pick up the new plugin, run `omarchy-shell shell rescanPlugins`.\n\nRight-clicking the clock cycles through formats. Some of those may not include seconds.\n\nBecause the clock is now your own copy, it won't get upstream fixes to the stock clock. To go back, run `omarchy plugin disable parker.clock`, or swap the id back to `omarchy.clock` in `shell.json`.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call grep {\"pattern\": \"clock\", \"path\": \".config\", \"max_results\": 50}",
+    "call read {\"path\": \".config/omarchy/shell.json\"}",
+    "call bash {\"command\": \"grep -rIl \\\"verticalFormat\\\" . 2>/dev/null | head\"}",
+    "call edit {\"path\": \".config/omarchy/shell.json\", \"old\": \"\\\"dddd HH:mm\\\",\", \"new\": \"\\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"python3 -m json.tool .config/omarchy/shell.json >/dev/null && echo ok\"}"
+   ]
+  },
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-opus-5-5",
+   "trial": 1,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json; ls /usr/share/omarchy/shell/plugins/ 2>&1 | head -50\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; grep -ril clock . | head; f=$(grep -ril \\\"formatAlt\\\" . | head -3); echo \\\"$f\\\"; for x in $f; do grep -n -i \\\"interval\\\\|timer\\\\|format\\\\|precision\\\\|Seconds\\\" $x | head -40; done\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins; sed -n 1,18p panels/clock/BarWidget.qml; sed -n 100,125p panels/clock/BarWidget.qml; grep -rn \\\"precision\\\\|Seconds\\\" bar/ panels/clock | head; cat panels/clock/manifest.json 2>/dev/null; ls panels/clock\"}",
+    "call bash {\"command\": \"which omarchy omarchy-plugin-clone 2>&1; ls /usr/bin | grep -i \\\"omarchy.*plugin\\\"; f=$(which omarchy-plugin-clone 2>/dev/null || ls /usr/share/omarchy/bin/*plugin* 2>/dev/null | head -1); echo $f; [ -n \\\"$f\\\" ] && cat $f\"}",
+    "call bash {\"command\": \"cat /usr/bin/omarchy-plugin-enable; grep -rn \\\"clonedFrom\\\" /usr/share/omarchy/shell --include=*.qml --include=*.js | head\"}",
+    "call bash {\"command\": \"sed -n 480,600p /usr/share/omarchy/shell/services/PluginRegistry.qml; grep -n \\\"function isEnabled\\\" -A15 /usr/share/omarchy/shell/services/PluginRegistry.qml\"}",
+    "call bash {\"command\": \"grep -rn \\\"centerAnchor\\\" /usr/share/omarchy/shell | head\"}",
+    "call bash {\"command\": \"grep -n \\\"function entryIndex\\\" -A12 /usr/share/omarchy/shell/plugins/bar/Bar.qml\"}",
+    "call bash {\"command\": \"grep -n \\\"function entryIndex\\\" -A15 /usr/share/omarchy/shell/plugins/bar/BarModel.js\"}",
+    "call bash {\"command\": \"set -e; cd .config/omarchy\\ncp shell.json shell.json.bak.$(date +%s)\\nmkdir -p plugins; cp -aL /usr/share/omarchy/shell/plugins/panels/clock plugins/parker.clock\\ncd plugins/parker.clock\\njq '.id=\\\"parker.clock\\\" | .name=\\\"My Clock\\\" | .barWidget.displayName=\\\"My Clock\\\" | .omarchy=((.o",
+    "call bash {\"command\": \"cd .config/omarchy && python3 - <<'E'\\nimport json\\np='shell.json'; c=json.load(open(p))\\nc['bar']['centerAnchor']='parker.clock'\\nfor e in c['bar']['layout']['center']:\\n    if e['id']=='omarchy.clock':\\n        e['id']='parker.clock'; e['format']='dddd HH:mm:ss'; e['verticalFormat']='",
+    "call check {\"name\": \"all\"}",
+    "verify all ok=True"
+   ],
+   "fitted_final": "m on the desktop:** the bar should pick this up on its own. If it doesn't, run `omarchy-shell shell rescanPlugins` and check that the clock ticks every second and stays centered.\n\n**Things to know**\n- Your copy won't get Omarchy updates to the clock widget. To go back to the built-in one, change the id in `shell.json` (and `centerAnchor`) back to `omarchy.clock`, then delete `.config/omarchy/plugins/parker.clock/`.\n- Right-clicking the clock still cycles through the built-in formats, and choosing one saves it over your format. That can remove the seconds, and you'd need to edit `format` again.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"ls -a; ls -a .config; ls .config/waybar 2>/dev/null; grep -n -A8 '\\\"clock\\\"' .config/waybar/config* 2>/dev/null\"}",
+    "call bash {\"command\": \"cd .config; find hypr omarchy -type f | head -50; grep -rniE 'clock|%H|%M|time|bar' hypr omarchy | head -40\"}",
+    "call bash {\"command\": \"cd .config/omarchy; cat shell.json; cd ~ 2>/dev/null; git -C ~/.cache/h0/ws/om-clock-seconds-d503792c log --oneline | head\"}",
+    "call edit {\"path\": \".config/omarchy/shell.json\", \"old\": \"\\\"dddd HH:mm\\\",\", \"new\": \"\\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"python -m json.tool .config/omarchy/shell.json >/dev/null && echo ok; git diff\"}"
+   ]
+  },
+  {
+   "task": "om-clock-seconds",
+   "model": "claude-haiku-5-5",
+   "trial": 2,
+   "failed_checks": [
+    "python3 - <<'PY'\nimport json\nd=json.load(open('.config/omarchy/shell.json'))\nws=[w for side in d['bar']['layout'].values() for w in side if w.get('id')=='omarchy.clock']\nassert ws and 'ss' in ws[0].get('format',''), ws\nPY \u2192 Traceback (most recent call last):\n  File \"<stdin>\", line 4, in <module>\nAssertionError: []\n"
+   ],
+   "fitted_steps": [
+    "call bash {\"command\": \"cat .config/omarchy/shell.json 2>/dev/null; echo ---; ls .config/omarchy/ .config/omarchy/plugins 2>/dev/null; echo ---; grep -rn -i \\\"clock\\\" \\\"$OMARCHY_PATH/config/omarchy/shell.json\\\" /usr/share/omarchy/shell/plugins 2>/dev/null | head -40\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins/panels/clock; cat BarWidget.qml; echo ----; sed -n 1,80p Model.js; echo ----; sed -n 50,80p /usr/share/omarchy/shell/plugins/bar/README.md\"}",
+    "call bash {\"command\": \"cd ~ 2>/dev/null; sed -n 1,200p /usr/share/omarchy/default/agents/skills/omarchy/plugins.md | head -150; echo ----; which omarchy-plugin omarchy 2>/dev/null; omarchy plugin --help 2>&1 | head -30\"}",
+    "call bash {\"command\": \"cd ~; cp .config/omarchy/shell.json .config/omarchy/shell.json.bak.$(date +%s); omarchy plugin clone omarchy.clock 2>&1; echo ---; find .config/omarchy/plugins -maxdepth 2 2>/dev/null; echo ---; grep -n '\\\"id\\\"' .config/omarchy/shell.json | head -3\"}",
+    "call bash {\"command\": \"pwd; cd ~/.cache/h0/ws/om-clock-seconds-c718236d && pwd && ls -la .config/omarchy/ && f=$(which omarchy); grep -rln \\\"plugin clone\\\\|plugin\\\\\\\" *)\\\" $(dirname $f)/../share/omarchy 2>/dev/null | head; file \\\"$f\\\" | head -1\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-c718236d; grep -rl \\\"clone\\\" /usr/bin/omarchy* /usr/share/omarchy/bin 2>/dev/null | head; f=$(grep -rl \\\"plugin.*clone\\\\|clone)\\\" /usr/bin/omarchy-plugin* 2>/dev/null | head -1); echo \\\"f=$f\\\"; [ -n \\\"$f\\\" ] && cat \\\"$f\\\" | head -150\"}",
+    "call bash {\"command\": \"cat /usr/bin/omarchy-plugin-clone\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell/plugins/panels/clock && ls -la && cat manifest.json; echo; echo \\\"USER=$USER\\\"; cd ~/.cache/h0/ws/om-clock-seconds-c718236d && cat .config/omarchy/shell.json | head -3 >/dev/null; ls .config/omarchy/plugins 2>/dev/null; grep -n \\\"\\\\.config\\\\|shell.",
+    "call bash {\"command\": \"cat /usr/bin/omarchy-plugin-enable | head -120\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell; grep -rn \\\"clonedFrom\\\" --include=*.qml --include=*.js . | head -20\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell; sed -n 480,570p services/PluginRegistry.qml\"}",
+    "call bash {\"command\": \"cd /usr/share/omarchy/shell; grep -rn \\\"centerAnchor\\\" --include=*.qml --include=*.js . | head; grep -n \\\"function canonicalWidgetId\\\" -A8 -r . | head -15\"}",
+    "call bash {\"command\": \"set -e; cd ~/.cache/h0/ws/om-clock-seconds-c718236d\\nmkdir -p .config/omarchy/plugins\\ncp -a /usr/share/omarchy/shell/plugins/panels/clock/. .config/omarchy/plugins/parker.clock/ 2>/dev/null || { mkdir -p .config/omarchy/plugins/parker.clock && cp -a /usr/share/omarchy/shell/",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-c718236d && cp .config/omarchy/shell.json .config/omarchy/shell.json.bak.$(date +%s) && ls .config/omarchy/shell.json.bak.*\"}",
+    "call edit {\"path\": \"~/.cache/h0/ws/om-clock-seconds-c718236d/.config/omarchy/shell.json\", \"old\": \"    \\\"centerAnchor\\\": \\\"omarchy.clock\\\",\", \"new\": \"    \\\"centerAnchor\\\": \\\"parker.clock\\\",\"}",
+    "trigger shell-guide inject ok=None",
+    "trigger json-syntax require ok=True",
+    "call edit {\"path\": \"~/.cache/h0/ws/om-clock-seconds-c718236d/.config/omarchy/shell.json\", \"old\": \"          \\\"id\\\": \\\"omarchy.clock\\\",\\n          \\\"format\\\": \\\"dddd HH:mm\\\",\", \"new\": \"          \\\"id\\\": \\\"parker.clock\\\",\\n          \\\"format\\\": \\\"dddd HH:mm:ss\\\",\"}",
+    "trigger json-syntax require ok=True",
+    "call check {\"name\": \"json\"}",
+    "call check {\"name\": \"all\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-c718236d && python3 -m json.tool .config/omarchy/plugins/parker.clock/manifest.json >/dev/null && echo manifest-ok && python3 -c \\\"\\nimport json;d=json.load(open('.config/omarchy/shell.json'));print(d['bar']['centerAnchor']);print([e for e i",
+    "verify all ok=True"
+   ],
+   "fitted_final": "parses. I did not run the Qt/QML code, so the widget's behaviour is unverified.\n\n**What you need to do:**\n1. Copy the changes into the live home, or otherwise apply them there.\n2. Run `omarchy-shell shell rescanPlugins` or restart the shell. If the bar doesn't pick up the clone, check that `shell.json` has `parker.clock` in the layout.\n3. Confirm the top bar shows seconds and ticks each second.\n\nThe vertical-bar format is unchanged, and the clock popup and right-click format cycle still work as before. Right-click cycles through the presets, so it will drop the seconds format once it moves on.",
+   "vanilla_passed": true,
+   "vanilla_steps": [
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-58736915 && find . -path '*waybar*' -type f | head -50 && grep -rn \\\"clock\\\" --include=*.jsonc --include=*.json --include=*.css --include=*.conf . 2>/dev/null | head -30\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-58736915 && cat .config/omarchy/shell.json && find . -type f | grep -v '^./.git/' | head -100\"}",
+    "call edit {\"path\": \".config/omarchy/shell.json\", \"old\": \"          \\\"format\\\": \\\"dddd HH:mm\\\",\", \"new\": \"          \\\"format\\\": \\\"dddd HH:mm:ss\\\",\"}",
+    "call bash {\"command\": \"cd ~/.cache/h0/ws/om-clock-seconds-58736915 && python3 -m json.tool .config/omarchy/shell.json >/dev/null && echo VALID && git diff --stat 2>/dev/null; grep -n '\\\"format\\\"' .config/omarchy/shell.json\"}"
+   ]
+  }
+ ],
+ "proposal": {
+  "diagnosis": [
+   {
+    "task": "om-clock-seconds",
+    "cause": "fitting",
+    "explanation": "All three fitted runs went digging through the packaged plugin source and then cloned the clock plugin under a new id. The map line 'Only to change a widget's code: run omarchy plugin clone...' presents cloning as a normal path, so the agents treated it as one, while vanilla simply edited the format option on the existing shell.json entry."
+   },
+   {
+    "task": "om-clock-seconds",
+    "cause": "fitting",
+    "explanation": "Same failure on the Opus run. It read the widget's timer/format code, decided a clone was warranted, and renamed the bar entry, so the stock widget id no longer has the requested option."
+   },
+   {
+    "task": "om-clock-seconds",
+    "cause": "fitting",
+    "explanation": "Same failure on the Haiku run. The shell-guide trigger only fires on before:edit, so it was injected after the clone had already happened through bash; the map's clone wording drove the choice."
+   }
+  ],
+  "edits": [
+   {
+    "op": "edit_map",
+    "old": "- Built-in widget options (format etc.): edit its existing entry in `shell.json` `bar.layout` and keep its id.\n- Only to change a widget's code: run `omarchy plugin clone omarchy.<name>`, then edit `.config/omarchy/plugins/<username>.<name>/`. Cloning switches the bar to the clone. Never edit the packaged copy.",
+    "new": "- Built-in widget options (format etc.): edit its existing entry in `shell.json` `bar.layout` and keep its stock id. That is the whole change; don't inspect or second-guess plugin internals.\n- Clone (`omarchy plugin clone omarchy.<name>` \u2192 `.config/omarchy/plugins/<username>.<name>/`) only when the user explicitly asks to change widget code. Cloning replaces the stock id in the bar. Never edit the packaged copy."
+   },
+   {
+    "op": "update_trigger",
+    "id": "shell-guide",
+    "note": "Read /usr/share/omarchy/default/agents/skills/omarchy/plugins.md first. Bar is omarchy-shell, not Waybar; idle values are seconds. Widget display/format changes go on the existing shell.json bar.layout entry, keeping its stock id. Clone only if the user explicitly asks to change widget code; never edit packaged ones."
+   }
+  ],
+  "expected_effect": "Agents will set widget options directly on the stock shell.json entry instead of cloning plugins, which matches the vanilla behavior that passed, and the clone path stays available for explicit code-change requests."
+ },
+ "applied": [
+  "edited map",
+  "updated trigger shell-guide"
+ ],
+ "meta": {
+  "usage": {
+   "input_tokens": 4,
+   "cache_creation_input_tokens": 12481,
+   "cache_read_input_tokens": 0,
+   "output_tokens": 1623,
+   "thinking_tokens": 777
+  },
+  "usd": 0.094881
+ }
+}

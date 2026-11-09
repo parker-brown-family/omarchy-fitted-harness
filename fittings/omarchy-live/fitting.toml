@@ -1,0 +1,66 @@
+name = "omarchy-live"
+version = 3
+root = "~/.config/hypr"
+about = "Live Omarchy 4 customisation: Hyprland Lua config, the Omarchy shell, terminal configs. Derived from omarchy-v3."
+verify = "lua"
+
+[policy]
+read_roots = ["~/.config/omarchy", "~/.config/alacritty", "~/.config/ghostty", "~/.config/kitty", "~/.config/foot"]
+write_roots = ["~/.config/omarchy", "~/.config/alacritty", "~/.config/ghostty", "~/.config/kitty", "~/.config/foot"]
+rw_paths = ["~/.config/omarchy", "~/.config/alacritty", "~/.config/ghostty", "~/.config/kitty", "~/.config/foot"]
+
+[checks.lua]
+run = "luac -p ~/.config/hypr/*.lua"
+cwd = "."
+about = "Lua syntax of the Hyprland config"
+timeout = 30
+
+[checks.json]
+run = "python3 -m json.tool ~/.config/omarchy/shell.json >/dev/null"
+cwd = "."
+about = "shell.json is valid JSON"
+timeout = 30
+
+[[triggers]]
+id = "hypr-guide"
+on = "before:*"
+match = "\\.config/hypr/"
+action = "inject"
+note = "Read /usr/share/omarchy/default/agents/skills/omarchy/hyprland.md first. Lua API; rebinding needs hl.unbind before o.bind; user validates via hyprctl reload && hyprctl configerrors."
+
+[[triggers]]
+id = "shell-guide"
+on = "before:*"
+match = "\\.config/omarchy/(shell\\.json|plugins/)"
+action = "inject"
+note = "Read /usr/share/omarchy/default/agents/skills/omarchy/plugins.md first. Bar is omarchy-shell, not Waybar; idle values are seconds. Widget display/format changes go on the existing shell.json bar.layout entry, keeping its stock id. Clone only if the user explicitly asks to change widget code; never edit packaged ones."
+
+[[triggers]]
+id = "theme-hook-guide"
+on = "before:write"
+match = "\\.config/omarchy/(themes|themed|backgrounds|hooks)/"
+action = "inject"
+note = "Read theming.md (themes/backgrounds/templates) or hooks.md (hooks/<event>.d/) in /usr/share/omarchy/default/agents/skills/omarchy/ first."
+
+[[triggers]]
+id = "lua-syntax"
+on = "after:edit"
+match = "\\.lua$"
+action = "require"
+check = "lua"
+note = "Lua config must pass luac -p; Hyprland breaks on syntax errors."
+
+[[triggers]]
+id = "json-syntax"
+on = "after:edit"
+match = "\\.json$"
+action = "require"
+check = "json"
+note = "shell.json hot-reloads; invalid JSON breaks the bar."
+
+[[triggers]]
+id = "no-refresh"
+on = "before:bash"
+match = "omarchy[- ](refresh|reinstall)\\b"
+action = "block"
+note = "refresh/reinstall overwrite user config. Ask the user for explicit confirmation before running."

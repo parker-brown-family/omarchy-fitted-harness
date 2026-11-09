@@ -1,0 +1,26 @@
+[
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/SKILL.md",
+    "sha256": "a8d88cfbb12e65f6bae1be57dfaeb4a368d313d842911635302752ec2d06adbe"
+  },
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/hyprland.md",
+    "sha256": "da496e069392ce60599a6d745bb68d4a5f770fe72634f4f64a9a8d75b8fbacd4"
+  },
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/plugins.md",
+    "sha256": "1bec65633bb5b0b2c7582b2ab38046aa43d1ac692bd50e48d548701519d4ad55"
+  },
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/theming.md",
+    "sha256": "2122773366e589c36ddd9a4b74b9bb96da96190b5f1434197e0a1ffad0942d36"
+  },
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/hooks.md",
+    "sha256": "9bffaac7f1e0b8666729e82d0eb43b2a03680166c5c8f972ee3a7285b317386a"
+  },
+  {
+    "path": "/usr/share/omarchy/default/agents/skills/omarchy/capture.md",
+    "sha256": "6a2d9dad19ee614f600fefcff4eef493389cb750d7fffc44be67e034eac0a96e"
+  }
+]

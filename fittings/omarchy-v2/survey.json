@@ -1,0 +1,45 @@
+{
+ "root": "./evals/omarchy/fixture/home",
+ "name": "home",
+ "files": 28,
+ "languages": [
+  [
+   "Lua",
+   8
+  ],
+  [
+   "Config",
+   3
+  ],
+  [
+   "JSON",
+   2
+  ],
+  [
+   "TOML",
+   2
+  ],
+  [
+   "Markdown",
+   1
+  ],
+  [
+   "Shell",
+   1
+  ]
+ ],
+ "top_dirs": [
+  [
+   ".config",
+   28
+  ]
+ ],
+ "secret_paths": [],
+ "agent_docs": {},
+ "manifests": {},
+ "checks": {},
+ "recent_commits": [],
+ "commit_count": null,
+ "hot_files": [],
+ "branch": null
+}
