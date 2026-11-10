@@ -1,0 +1,5 @@
+{"id": "L1", "text": "Hyprland config is Lua: o.bind, o.rebind, hl.unbind, hl.monitor, o.window, o.launch_on_start. Never write hyprlang .conf syntax into the .lua files.", "helpful": 0, "harmful": 0, "source": "fit"}
+{"id": "L2", "text": "When replacing a key already bound, use o.rebind(\"KEYS\", ...) and tell the user the previous binding.", "helpful": 0, "harmful": 0, "source": "fit"}
+{"id": "L3", "text": "Customize stock themes via a same-slug overlay in ~/.config/omarchy/themes/<slug>/ holding only changed files, then omarchy theme set.", "helpful": 0, "harmful": 0, "source": "fit"}
+{"id": "L5", "text": "Window-rule syntax changes between Hyprland versions; mirror $OMARCHY_PATH/default/hypr/windows.lua rather than memory.", "helpful": 0, "harmful": 0, "source": "fit"}
+{"id": "L6", "text": "Run omarchy debug only with --no-sudo --print; omarchy refresh/reinstall need user confirmation first.", "helpful": 0, "harmful": 0, "source": "fit"}
